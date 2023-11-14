@@ -20,7 +20,7 @@ class PlacementTile {
       mouse.y > this.position.y &&
       mouse.y < this.position.y + this.size
     ) {
-      console.log("colliding");
+      // console.log("colliding");
       this.color = "white";
     } else this.color = "rgba(255, 255, 255, 0.15)";
   }

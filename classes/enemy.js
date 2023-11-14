@@ -8,6 +8,7 @@ class Enemy {
     this.position = position;
     this.width = 100;
     this.height = 100;
+    this.radius = 50;
     this.waypointIndex = 0;
     this.center = {
       x: this.position.x + this.width / 2,
@@ -16,7 +17,10 @@ class Enemy {
   }
   draw() {
     c.fillStyle = "red";
-    c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    // c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    c.beginPath();
+    c.arc(this.center.x, this.center.y, this.radius, 0, Math.PI * 2);
+    c.fill();
   }
   update() {
     this.draw();

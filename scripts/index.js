@@ -37,7 +37,7 @@ placementTilesData2D.forEach((row, y) => {
   });
 });
 
-console.log(placementTiles);
+// console.log(placementTiles);
 
 const enemies = [];
 for (let i = 1; i < 10; i++) {
@@ -62,7 +62,32 @@ function animate() {
   });
 
   buildings.forEach((building) => {
-    building.draw();
+    building.update();
+    building.target = null;
+    const validEnemies = enemies.filter((enemy) => {
+      const xDiff = enemy.center.x - building.center.x;
+      const yDiff = enemy.center.y - building.center.y;
+
+      const distance = Math.hypot(xDiff, yDiff);
+      return distance < enemy.radius + building.radius;
+    });
+    building.target = validEnemies[0];
+    // console.log(validEnemies);
+
+    for (let i = building.projectiles.length - 1; i >= 0; i--) {
+      const projectile = building.projectiles[i];
+
+      projectile.update();
+
+      const xDiff = projectile.enemy.center.x - projectile.position.x;
+      const yDiff = projectile.enemy.center.y - projectile.position.y;
+
+      const distance = Math.hypot(xDiff, yDiff);
+      if (distance < projectile.enemy.radius + projectile.radius) {
+        building.projectiles.splice(i, 1);
+      }
+      // console.log(distance);
+    }
   });
 }
 
@@ -83,7 +108,7 @@ canvas.addEventListener("click", (event) => {
     );
     activeTile.isOccupied = true;
   }
-  console.log(buildings);
+  // console.log(buildings);
 });
 
 window.addEventListener("mousemove", (event) => {
