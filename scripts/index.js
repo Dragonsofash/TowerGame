@@ -40,22 +40,46 @@ placementTilesData2D.forEach((row, y) => {
 // console.log(placementTiles);
 
 const enemies = [];
-for (let i = 1; i < 10; i++) {
-  const xOffset = i * 150;
-  enemies.push(
-    new Enemy({ position: { x: waypoints[0].x - xOffset, y: waypoints[0].y } })
-  );
+
+function spawnEnemies(spawnCount) {
+  for (let i = 1; i < spawnCount + 1; i++) {
+    const xOffset = i * 150;
+    enemies.push(
+      new Enemy({
+        position: { x: waypoints[0].x - xOffset, y: waypoints[0].y },
+      })
+    );
+  }
 }
 
 const buildings = [];
 let activeTile = undefined;
+let enemyCount = 3;
+let hearts = 10;
+spawnEnemies(3);
 
 function animate() {
-  requestAnimationFrame(animate);
+  const animationId = requestAnimationFrame(animate);
   c.drawImage(image, 0, 0);
   for (let i = enemies.length - 1; i >= 0; i--) {
     const enemy = enemies[i];
     enemy.update();
+
+    if (enemy.position.y + enemy.height < 0) {
+      hearts -= 1;
+      enemies.splice(i, 1);
+      console.log(hearts);
+
+      if (hearts === 0) {
+        cancelAnimationFrame(animationId);
+        document.querySelector('#gameOver').style.display = 'flex'
+      }
+    }
+  }
+
+  if (enemies.length === 0) {
+    enemyCount += 2;
+    spawnEnemies(enemyCount);
   }
 
   placementTiles.forEach((tile) => {
@@ -87,6 +111,7 @@ function animate() {
 
       // When projectile hits enemy
       if (distance < projectile.enemy.radius + projectile.radius) {
+        //enemy health and removavla
         projectile.enemy.health -= 20;
         if (projectile.enemy.health <= 0) {
           const enemyIndex = enemies.findIndex((enemy) => {
