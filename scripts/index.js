@@ -57,6 +57,7 @@ let activeTile = undefined;
 let enemyCount = 3;
 let hearts = 10;
 let coins = 100;
+const explosions = [];
 spawnEnemies(3);
 
 function animate() {
@@ -75,6 +76,16 @@ function animate() {
         cancelAnimationFrame(animationId);
         document.querySelector("#gameOver").style.display = "flex";
       }
+    }
+  }
+
+  for (let i = explosions.length - 1; i >= 0; i--) {
+    const explosion = explosions[i];
+    explosion.draw();
+    explosion.update();
+
+    if (explosion.frames.current >= explosion.frames.max - 1) {
+      explosions.splice(i, 1);
     }
   }
 
@@ -124,7 +135,15 @@ function animate() {
             document.querySelector("#coinCounter").innerHTML = coins;
           }
         }
-        console.log(projectile.enemy.health);
+        // console.log(projectile.enemy.health);
+        explosions.push(
+          new Sprite({
+            position: { x: projectile.position.x, y: projectile.position.y },
+            imageSrc: "/images/explosion.png",
+            frames: { max: 4 },
+            offset: { x: 0, y: 0 },
+          })
+        );
         building.projectiles.splice(i, 1);
       }
       // console.log(distance);
@@ -150,6 +169,9 @@ canvas.addEventListener("click", (event) => {
       })
     );
     activeTile.isOccupied = true;
+    buildings.sort((a, b) => {
+      return a.position.y - b.position.y;
+    });
   }
   // console.log(buildings);
 });

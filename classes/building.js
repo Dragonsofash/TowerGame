@@ -1,6 +1,17 @@
-class Building {
+class Building extends Sprite {
   constructor({ position = { x: 0, y: 0 } }) {
-    this.position = position;
+    super({
+      position,
+      imageSrc: "/images/tower.png",
+      frames: {
+        max: 19,
+      },
+      offset: {
+        x: 0,
+        y: -80,
+      },
+    });
+
     this.width = 64 * 2;
     this.height = 64;
     this.center = {
@@ -10,66 +21,39 @@ class Building {
     this.projectiles = [];
     this.radius = 250;
     this.target;
-    this.frames = 0;
   }
 
   draw() {
-    c.fillStyle = "blue";
-    c.fillRect(this.position.x, this.position.y, this.width, 64);
+    super.draw();
 
-    c.beginPath();
-    c.arc(this.center.x, this.center.y, this.radius, 0, Math.PI * 2);
-    c.fillStyle = "rgba(0, 0, 255, 0.2)";
-    c.fill();
+    // c.beginPath();
+    // c.arc(this.center.x, this.center.y, this.radius, 0, Math.PI * 2);
+    // c.fillStyle = "rgba(0, 0, 255, 0.2)";
+    // c.fill();
   }
 
   update() {
     this.draw();
-    if (this.frames % 100 === 0 && this.target) {
-      this.projectiles.push(
-        new Projectile({
-          position: {
-            x: this.center.x,
-            y: this.center.y,
-          },
-          enemy: this.target,
-        })
-      );
-    }
-    this.frames++;
-  }
-}
+    if (this.target || (!this.target && this.frames.current !== 0))
+      super.update();
 
-class Projectile {
-  constructor({ position = { x: 0, y: 0 }, enemy }) {
-    this.position = position;
-    this.velocity = {
-      x: 0,
-      y: 0,
-    };
-    this.enemy = enemy;
-    this.radius = 10;
-  }
-  draw() {
-    c.beginPath();
-    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-    c.fillStyle = "orange";
-    c.fill();
+    if (
+      this.target &&
+      this.frames.current === 6 &&
+      this.frames.elapsed % this.frames.hold === 0
+    )
+      this.shoot();
   }
 
-  update() {
-    this.draw();
-
-    const angle = Math.atan2(
-      this.enemy.center.y - this.position.y,
-      this.enemy.center.x - this.position.x
+  shoot() {
+    this.projectiles.push(
+      new Projectile({
+        position: {
+          x: this.center.x - 20,
+          y: this.center.y - 110,
+        },
+        enemy: this.target,
+      })
     );
-
-    this.power = 5;
-    this.velocity.x = Math.cos(angle) * this.power;
-    this.velocity.y = Math.sin(angle) * this.power;
-
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
   }
 }
