@@ -22,3 +22,49 @@ body {
   -webkit-text-stroke: 5px black;
   display: none;
 }
+
+#heart {
+  width: 30px;
+  color: red;
+}
+
+#heartCounter {
+  margin-right: 20px;
+}
+
+#resources {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-size: 40px;
+  color: white;
+  -webkit-text-stroke: 1.5px black;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+#resourceBox {
+  position: absolute;
+  height: 75px;
+  width: 200px;
+  top: 0px;
+  right: 0px;
+  background-color: rgba(0, 0, 0, .65);
+}
+
+#coin {
+  width: 30px;
+  color: gold;
+  margin-right: 3px;
+}
+
+#hearts{
+  display: flex;
+  align-items: center;
+}
+
+#coins {
+  display: flex;
+  align-items: center;
+}

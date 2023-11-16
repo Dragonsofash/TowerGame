@@ -56,6 +56,7 @@ const buildings = [];
 let activeTile = undefined;
 let enemyCount = 3;
 let hearts = 10;
+let coins = 100;
 spawnEnemies(3);
 
 function animate() {
@@ -68,11 +69,11 @@ function animate() {
     if (enemy.position.y + enemy.height < 0) {
       hearts -= 1;
       enemies.splice(i, 1);
-      console.log(hearts);
+      document.querySelector("#heartCounter").innerHTML = hearts;
 
       if (hearts === 0) {
         cancelAnimationFrame(animationId);
-        document.querySelector('#gameOver').style.display = 'flex'
+        document.querySelector("#gameOver").style.display = "flex";
       }
     }
   }
@@ -119,6 +120,8 @@ function animate() {
           });
           if (enemyIndex > -1) {
             enemies.splice(enemyIndex, 1);
+            coins += 25;
+            document.querySelector("#coinCounter").innerHTML = coins;
           }
         }
         console.log(projectile.enemy.health);
@@ -135,7 +138,9 @@ const mouse = {
 };
 
 canvas.addEventListener("click", (event) => {
-  if (activeTile && !activeTile.isOccupied) {
+  if (activeTile && !activeTile.isOccupied && coins - 50 >= 0) {
+    coins -= 50;
+    document.querySelector("#coinCounter").innerHTML = coins;
     buildings.push(
       new Building({
         position: {
